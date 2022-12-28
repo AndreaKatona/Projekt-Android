@@ -26,7 +26,7 @@ import com.example.a3tracker.databinding.FragmentSettingsBinding
 import com.example.a3tracker.viewmodel.ProfileViewModel
 import com.example.a3tracker.viewmodel.ProfileViewModelFactory
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var profileViewModel : ProfileViewModel
     private lateinit var binding : FragmentSettingsBinding
 
@@ -43,15 +43,11 @@ class SettingsFragment : Fragment() {
         val factory = ProfileViewModelFactory(ThreeTrackerRepository())
         profileViewModel = ViewModelProvider(requireActivity(), factory)[ProfileViewModel::class.java]
 
+        profileViewModel
+
         val view = binding.root
 
-        binding.buttonUpdate.setOnClickListener{
 
-//            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-//            transaction.replace(R.id.recycler_view, UpdateFragment())
-//            transaction.disallowAddToBackStack()
-//            transaction.commit()
-        }
 
         binding.buttonLogout.setOnClickListener{
             val preferences = requireActivity().getSharedPreferences("ThreeTrackerSharedPreferences",
@@ -72,6 +68,16 @@ class SettingsFragment : Fragment() {
             setValues()
         })
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonUpdate.setOnClickListener{
+
+            findNavController().navigate(R.id.updateFragment)
+
+        }
     }
 
 

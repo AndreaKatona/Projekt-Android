@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a3tracker.App
 import com.example.a3tracker.api.ThreeTrackerRepository
+import com.example.a3tracker.api.model.LoginRequestBody
 import com.example.a3tracker.api.model.UserResponse
 import com.example.a3tracker.manager.SharedPreferencesManager
 import kotlinx.coroutines.launch
@@ -19,6 +20,12 @@ class ProfileViewModel (val repository: ThreeTrackerRepository) : ViewModel() {
 
     init {
         getUser()
+    }
+    fun getUsers()
+    {
+        viewModelScope.launch {
+            getUser()
+        }
     }
 
     private fun getUser() {

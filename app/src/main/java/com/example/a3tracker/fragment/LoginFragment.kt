@@ -18,7 +18,7 @@ import com.example.a3tracker.viewmodel.LoginViewModel
 import com.example.a3tracker.viewmodel.LoginViewModelFactory
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.fragment_login) {
     companion object {
         private val TAG: String = javaClass.simpleName
     }
@@ -66,4 +66,6 @@ class LoginFragment : Fragment() {
 
         return view
     }
+
+
 }

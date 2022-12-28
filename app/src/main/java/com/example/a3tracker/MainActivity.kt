@@ -6,10 +6,9 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.a3tracker.databinding.ActivityMainBinding
-import com.example.a3tracker.fragment.SettingsFragment
-import com.example.a3tracker.fragment.TaskListFragment
 import com.example.a3tracker.manager.SharedPreferencesManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -52,10 +51,8 @@ class MainActivity: AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener {
 
             when (it.itemId) {
-                R.id.activitiesFragment -> replaceFragment(TaskListFragment())
-                R.id.settingsFragment -> replaceFragment(SettingsFragment())
-                //R.id.taskFragment -> replaceFragment(MyTasksFragment())
-
+                R.id.activitiesFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.taskListFragment)
+                R.id.settingsFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.settingsFragment2)
 
                 else ->
                 {
@@ -81,11 +78,5 @@ class MainActivity: AppCompatActivity() {
         super.onStop()
         Log.d(TAG, "onStop() called!")
     }
-    private fun replaceFragment(fragment: Fragment)
-    {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.nav_host_fragment,fragment)
-        fragmentTransaction.commit()
-    }
+
 }
