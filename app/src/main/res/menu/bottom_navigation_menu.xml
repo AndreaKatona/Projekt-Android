@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/activitiesFragment"
+        android:icon="@drawable/ic_baseline_dashboard_24"
+        android:title = "@string/activities"/>
+    <item
+        android:id="@+id/taskFragment"
+        android:icon="@drawable/ic_baseline_event_available_24"
+        android:title = "@string/my_tasks"/>
+
+    <item
+        android:id="@+id/groupsFragment"
+        android:icon="@drawable/ic_baseline_diversity_3_24"
+        android:title = "@string/my_groups"/>
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title = "@string/settings"/>
+
+</menu>
