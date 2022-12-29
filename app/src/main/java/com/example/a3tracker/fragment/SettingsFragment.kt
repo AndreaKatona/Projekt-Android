@@ -30,9 +30,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var profileViewModel : ProfileViewModel
     private lateinit var binding : FragmentSettingsBinding
 
-    override fun onCreate( savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,30 +41,28 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val factory = ProfileViewModelFactory(ThreeTrackerRepository())
         profileViewModel = ViewModelProvider(requireActivity(), factory)[ProfileViewModel::class.java]
 
-        profileViewModel
-
         val view = binding.root
 
+        profileViewModel.user.observe(this.viewLifecycleOwner) {
 
+            profileViewModel.getUsers()
+            binding.personName.setText(profileViewModel.user.value?.last_name+" "+profileViewModel.user.value?.first_name)
+            binding.phoneNum.setText(profileViewModel.user.value?.number)
+            binding.address.setText(profileViewModel.user.value?.location)
+            binding.emailAddress.setText(profileViewModel.user.value?.email)
 
-        binding.buttonLogout.setOnClickListener{
-            val preferences = requireActivity().getSharedPreferences("ThreeTrackerSharedPreferences",
-                Context.MODE_PRIVATE
-            )
-            val editor = preferences.edit()
+            val options: RequestOptions = RequestOptions()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
 
-            editor.remove("SHARED_PREFERENCES_KEY_TOKEN")
-            editor.apply()
-
-            moveToNewActivity()
-
-
+            context?.let {
+                Glide.with(it)
+                    .load(profileViewModel.user.value?.image)
+                    .apply(options)
+                    .override(100, 100)
+                    .into(binding.profileImageView)
+            }
         }
-
-        profileViewModel.user.observe(viewLifecycleOwner, Observer { user ->
-
-            setValues()
-        })
         return view
     }
 
@@ -78,34 +74,19 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             findNavController().navigate(R.id.updateFragment)
 
         }
-    }
+        binding.buttonLogout.setOnClickListener{
+            val preferences = requireActivity().getSharedPreferences("ThreeTrackerSharedPreferences", Context.MODE_PRIVATE)
+            val editor = preferences.edit()
 
+            editor.remove("SHARED_PREFERENCES_KEY_TOKEN")
+            editor.apply()
 
-    @SuppressLint("SetTextI18n")
-    fun setValues()
-    {
-        binding.personName.setText(profileViewModel.user.value?.last_name+" "+profileViewModel.user.value?.first_name)
-        binding.phoneNum.setText(profileViewModel.user.value?.number)
-        binding.address.setText(profileViewModel.user.value?.location)
-        binding.emailAddress.setText(profileViewModel.user.value?.email)
+            findNavController().navigate(R.id.loginFragment)
 
-        val options: RequestOptions = RequestOptions()
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground)
-
-        context?.let {
-            Glide.with(it)
-                .load(profileViewModel.user.value?.image)
-                .apply(options)
-                .override(100, 100)
-                .into(binding.profileImageView)
         }
     }
-    private fun moveToNewActivity() {
-        val main = Intent(activity, MainActivity::class.java)
-        startActivity(main)
-        (activity as Activity?)!!.overridePendingTransition(0, 0)
-    }
+
+
 
 
 

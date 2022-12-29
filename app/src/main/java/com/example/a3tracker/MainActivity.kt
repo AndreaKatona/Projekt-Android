@@ -5,11 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.a3tracker.api.ThreeTrackerRepository
 import com.example.a3tracker.databinding.ActivityMainBinding
 import com.example.a3tracker.manager.SharedPreferencesManager
+import com.example.a3tracker.viewmodel.GetUsersViewModel
+import com.example.a3tracker.viewmodel.GetUsersViewModelFactory
+import com.example.a3tracker.viewmodel.TasksViewModel
+import com.example.a3tracker.viewmodel.TasksViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity: AppCompatActivity() {
@@ -21,6 +27,12 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val factory = TasksViewModelFactory(ThreeTrackerRepository())
+        val tasksViewModel = ViewModelProvider(this, factory)[TasksViewModel::class.java]
+
+        val factoryUsers = GetUsersViewModelFactory(ThreeTrackerRepository())
+        val getUsersViewModel  = ViewModelProvider(this,factoryUsers)[GetUsersViewModel::class.java]
 
         val token = App.sharedPreferences.getStringValue(SharedPreferencesManager.KEY_TOKEN, "EMPTY")
         val navHostFragment: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -53,7 +65,8 @@ class MainActivity: AppCompatActivity() {
             when (it.itemId) {
                 R.id.activitiesFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.taskListFragment)
                 R.id.settingsFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.settingsFragment2)
-
+                R.id.taskFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.myTasksFragment)
+                R.id.groupsFragment -> findNavController(R.id.nav_host_fragment).navigate(R.id.groupFragment)
                 else ->
                 {
 

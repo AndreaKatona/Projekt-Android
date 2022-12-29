@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.a3tracker.fragment.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_taskListFragment"
             app:destination="@id/taskListFragment" />
@@ -14,7 +16,8 @@
     <fragment
         android:id="@+id/settingsFragment2"
         android:name="com.example.a3tracker.fragment.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment2_to_updateFragment"
             app:destination="@id/updateFragment" />
@@ -22,7 +25,8 @@
     <fragment
         android:id="@+id/taskListFragment"
         android:name="com.example.a3tracker.fragment.TaskListFragment"
-        android:label="TaskListFragment" >
+        android:label="TaskListFragment"
+        tools:layout="@layout/fragment_task_list">
         <action
             android:id="@+id/action_taskListFragment_to_settingsFragment2"
             app:destination="@id/settingsFragment2" />
@@ -30,5 +34,21 @@
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.example.a3tracker.fragment.UpdateFragment"
-        android:label="UpdateFragment" />
+        android:label="UpdateFragment"
+        tools:layout="@layout/fragment_update"/>
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="com.example.a3tracker.fragment.GroupFragment"
+        android:label="fragment_group"
+        tools:layout="@layout/fragment_group" />
+    <fragment
+        android:id="@+id/myTasksFragment"
+        android:name="com.example.a3tracker.fragment.MyTasksFragment"
+        android:label="fragment_my_tasks"
+        tools:layout="@layout/fragment_my_tasks" />
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.example.a3tracker.fragment.AddTaskFragment"
+        android:label="fragment_add_task"
+        tools:layout="@layout/fragment_add_task" />
 </navigation>

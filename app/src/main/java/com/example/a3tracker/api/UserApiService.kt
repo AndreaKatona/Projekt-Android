@@ -24,5 +24,7 @@ interface UserApiService {
     @POST(BackendConstants.UPDATE_USER)
     suspend fun updateUser(@Header(BackendConstants.HEADER_TOKEN) token: String,@Body updateRequestResponse: UpdateRequestResponse):Response<String>
 
+    @GET(BackendConstants.GET_USERS)
+    suspend fun getUsers(@Header(BackendConstants.HEADER_TOKEN) token: String):Response<List<UserResponse>>
 
 }

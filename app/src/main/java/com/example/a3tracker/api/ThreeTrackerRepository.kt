@@ -2,6 +2,7 @@ package com.example.a3tracker.api
 
 import com.example.a3tracker.api.model.*
 import retrofit2.Response
+import retrofit2.http.Header
 
 class ThreeTrackerRepository {
 
@@ -29,5 +30,9 @@ class ThreeTrackerRepository {
     suspend fun updateUser(token: String,updateRequestResponse: UpdateRequestResponse) : Response<String>
     {
         return RetrofitInstance.USER_API_SERVICE.updateUser(token,updateRequestResponse)
+    }
+    suspend fun getUsers(token: String):Response< List <UserResponse> >
+    {
+        return RetrofitInstance.USER_API_SERVICE.getUsers(token)
     }
 }

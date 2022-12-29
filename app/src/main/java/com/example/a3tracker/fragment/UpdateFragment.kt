@@ -5,8 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.a3tracker.R
 import com.example.a3tracker.api.ThreeTrackerRepository
 import com.example.a3tracker.databinding.FragmentUpdateBinding
 import com.example.a3tracker.viewmodel.*
@@ -15,7 +19,7 @@ class UpdateFragment : Fragment() {
 
 
     private lateinit var binding : FragmentUpdateBinding
-    private lateinit var profileViewModel : ProfileViewModel
+    private val profileViewModel : ProfileViewModel by activityViewModels()
     private lateinit var updateProfile : UpdateProfileViewModel
 
     override fun onCreateView(
@@ -23,23 +27,32 @@ class UpdateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUpdateBinding.inflate(inflater)
+
         val factoryUpdate = UpdateProfileViewModelFactory(ThreeTrackerRepository())
         updateProfile= ViewModelProvider(requireActivity(),factoryUpdate)[UpdateProfileViewModel::class.java]
 
-        val factory = ProfileViewModelFactory(ThreeTrackerRepository())
-        profileViewModel = ViewModelProvider(requireActivity(),factory)[ProfileViewModel::class.java]
+       // val factory = ProfileViewModelFactory(ThreeTrackerRepository())
+        //profileViewModel = ViewModelProvider(requireActivity(),factory)[ProfileViewModel::class.java]
 
-        profileViewModel.user.observe(viewLifecycleOwner, Observer { user ->
 
-            setValues()
-        })
-        binding.button.setOnClickListener {
-            updateValues()
 
-        }
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setValues()
+
+        binding.button.setOnClickListener {
+            updateValues()
+            Toast.makeText(
+                activity, "Updated",
+                Toast.LENGTH_LONG
+            ).show()
+
+            findNavController().navigate(R.id.settingsFragment2)
+        }
+    }
 
     fun setValues()
     {
@@ -65,7 +78,7 @@ class UpdateFragment : Fragment() {
         }
        image?.let { updateProfile.update(last_name,first_name,address,number, it) }
 
-        profileViewModel.getUsers()
+
 
     }
 

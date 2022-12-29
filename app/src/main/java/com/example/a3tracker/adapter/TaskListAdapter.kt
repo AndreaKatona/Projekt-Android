@@ -1,6 +1,4 @@
 package com.example.a3tracker.adapter
-
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.a3tracker.R
 import com.example.a3tracker.api.model.TaskResponse
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TasksListAdapter(
@@ -97,17 +94,17 @@ class TasksListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val currentItem = list[position]
+        val tmp = position - 1
 
-        return if (currentItem.status == 0) {
+        return if (tmp<0) {
             TaskListItemType.SIMPLE.value
         } else {
             TaskListItemType.COMPLEX.value
         }
+
     }
 
     // 3. Called many times, when we scroll the list
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: SimpleDataViewHolder, position: Int) {
         if (getItemViewType(position) == TaskListItemType.COMPLEX.value) {
             val complexHolder = (holder as DataViewHolder)
@@ -115,10 +112,18 @@ class TasksListAdapter(
 
             complexHolder.taskTitleTextView.text = currentItem.title
             complexHolder.taskDescriptionTextView.text = currentItem.description
-            complexHolder.taskDepartment.text = currentItem.departmentID.toString() + " department"
+            val departmentID = currentItem.departmentID.toString()
+            complexHolder.taskDepartment.text = "${departmentID} department"
 
-            complexHolder.taskDateTextView.text = "Due "+ getShortDate(currentItem.deadline)
-            complexHolder.taskCreatedBy.text = "Created by "+currentItem.createdByUserID
+            if(currentItem.deadline.toString() == "0")
+            {
+                complexHolder.taskDateTextView.text = "No deadline specified"
+            }else
+            {
+                complexHolder.taskDateTextView.text = "Due "
+            }
+
+            complexHolder.taskCreatedBy.text = "Created by "+currentItem.createdByUserID.toString()
 
             when (currentItem.priority) {
                 0 -> {
@@ -149,6 +154,7 @@ class TasksListAdapter(
     // Update the list
     fun setData(newList: ArrayList<TaskResponse>) {
         list = newList
+
     }
 
     private enum class TaskListItemType(val value: Int) {
@@ -157,15 +163,3 @@ class TasksListAdapter(
     }
 }
 
-fun getShortDate(ts:Long?):String{
-
-    val ms = System.currentTimeMillis()
-
-    if(ts == null) return ""
-    //Get instance of calendar
-    val calendar = Calendar.getInstance(Locale.getDefault())
-    //get current date from ts
-    calendar.timeInMillis = ts +ms
-    //return formatted date
-    return android.text.format.DateFormat.format("E, dd MMM yyyy", calendar).toString()
-}
