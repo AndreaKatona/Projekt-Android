@@ -37,5 +37,9 @@
     <string name="New">New</string>
     <string name="add_new_task">Add new task</string>
     <string name="select_department">Select Department</string>
+    <string name="project_type">Project type</string>
+    <string name="progress_status">Progress status</string>
+    <string name="assigned_date">Assigned date</string>
+    <string name="assignee">Assignee</string>
 
 </resources>

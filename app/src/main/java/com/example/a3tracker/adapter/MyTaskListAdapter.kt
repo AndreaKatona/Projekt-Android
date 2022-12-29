@@ -1,16 +1,22 @@
 package com.example.a3tracker.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a3tracker.R
+import com.example.a3tracker.api.model.DepartmentResponse
 import com.example.a3tracker.api.model.TaskResponse
 import com.example.a3tracker.api.model.UserResponse
+import com.example.a3tracker.fragment.MyTasksFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -18,6 +24,8 @@ import kotlin.collections.ArrayList
 class MyTaskListAdapter(
     private var list: ArrayList<TaskResponse>,
     private var listUser: ArrayList<UserResponse>,
+    private var context: Context,
+    private var departments:ArrayList<DepartmentResponse>,
     private val listener: OnItemClickListener,
     private val listener2: OnItemLongClickListener
 ) :
@@ -29,6 +37,7 @@ class MyTaskListAdapter(
 
     interface OnItemLongClickListener {
         fun onItemLongClick(position: Int)
+
     }
 
     // 1. user defined ViewHolder type - Embedded class!
@@ -43,7 +52,8 @@ class MyTaskListAdapter(
         val taskAssignedTo: TextView = itemView.findViewById(R.id.my_task_assignedTo)
         val progressBar : ProgressBar = itemView.findViewById(R.id.progressBar)
         val progress : TextView = itemView.findViewById(R.id.progress)
-
+        val deparmentProject : TextView = itemView.findViewById(R.id.my_task_department)
+        val button:Button = itemView.findViewById(R.id.my_task_button)
         init {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
@@ -51,9 +61,11 @@ class MyTaskListAdapter(
 
         override fun onClick(p0: View?) {
             val currentPosition = this.adapterPosition
+
             listener.onItemClick(currentPosition)
 
         }
+
 
         override fun onLongClick(p0: View?): Boolean {
             val currentPosition = this.adapterPosition
@@ -112,24 +124,41 @@ class MyTaskListAdapter(
         holder.taskAssignedTo.text = "Assigned to ${assignedName}"
         holder.progressBar.progress = currentItem.status
         holder.progress.text = "${currentItem.status}%"
+        val depName = getDepartmentById(currentItem.departmentID)
+        holder.deparmentProject.text = "${depName} project"
+
+
+
+
     }
 
     override fun getItemCount() = list.size
 
     // Update the list
-    fun setData(newList: ArrayList<TaskResponse>, newListUser: ArrayList<UserResponse>) {
+    fun setData(newList: ArrayList<TaskResponse>, newListUser: ArrayList<UserResponse>,department : ArrayList<DepartmentResponse>) {
         list = newList
         list.reverse()
         listUser = newListUser
+        departments = department
     }
 
     fun getNameById(Id : Int) : String
     {
-       val user = listUser.find { it.id == Id}
+        val user = listUser.find { it.id == Id}
         //Log.d("user", user.toString())
         if (user != null) {
             return user.last_name + " " +user.first_name
         }
         return "Anonymus"
     }
+    fun getDepartmentById(Id : Int) : String
+    {
+        val value = departments.find { it.Id == Id}
+        //Log.d("user", user.toString())
+        if (value != null) {
+            return value.departmentName
+        }
+        return "Anonymus"
+    }
+
 }

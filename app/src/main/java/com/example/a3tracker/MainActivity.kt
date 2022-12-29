@@ -12,10 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.a3tracker.api.ThreeTrackerRepository
 import com.example.a3tracker.databinding.ActivityMainBinding
 import com.example.a3tracker.manager.SharedPreferencesManager
-import com.example.a3tracker.viewmodel.GetUsersViewModel
-import com.example.a3tracker.viewmodel.GetUsersViewModelFactory
-import com.example.a3tracker.viewmodel.TasksViewModel
-import com.example.a3tracker.viewmodel.TasksViewModelFactory
+import com.example.a3tracker.viewmodel.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity: AppCompatActivity() {
@@ -33,6 +30,9 @@ class MainActivity: AppCompatActivity() {
 
         val factoryUsers = GetUsersViewModelFactory(ThreeTrackerRepository())
         val getUsersViewModel  = ViewModelProvider(this,factoryUsers)[GetUsersViewModel::class.java]
+
+        val factoryDepartments = DepartmentsViewModelFactory(ThreeTrackerRepository())
+        val departments  = ViewModelProvider(this,factoryDepartments)[DepartmentsViewModel::class.java]
 
         val token = App.sharedPreferences.getStringValue(SharedPreferencesManager.KEY_TOKEN, "EMPTY")
         val navHostFragment: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

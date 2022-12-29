@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,29 +14,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a3tracker.R
 import com.example.a3tracker.adapter.MyTaskListAdapter
+import com.example.a3tracker.api.model.DepartmentResponse
 import com.example.a3tracker.api.model.TaskResponse
 import com.example.a3tracker.api.model.UserResponse
+import com.example.a3tracker.viewmodel.DepartmentsViewModel
 import com.example.a3tracker.viewmodel.GetUsersViewModel
 import com.example.a3tracker.viewmodel.TasksViewModel
+import java.nio.BufferUnderflowException
 
 
 class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.OnItemClickListener,
     MyTaskListAdapter.OnItemLongClickListener {
 
-    companion object {
-        private val TAG: String = javaClass.simpleName
-    }
 
     private val tasksViewModel: TasksViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyTaskListAdapter
     private val getUsersViewModel:GetUsersViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
+    private val departmentsViewModel:DepartmentsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +45,9 @@ class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.
         setupRecyclerView()
         tasksViewModel.products.observe(viewLifecycleOwner) {
            // Log.d(TAG, "My tasks list = $it")
-            adapter.setData(tasksViewModel.products.value as ArrayList<TaskResponse>,getUsersViewModel.getUsers.value as ArrayList<UserResponse>)
+            adapter.setData(tasksViewModel.products.value as ArrayList<TaskResponse>,
+                getUsersViewModel.getUsers.value as ArrayList<UserResponse>,
+                departmentsViewModel.departments.value as ArrayList<DepartmentResponse> )
             adapter.notifyDataSetChanged()
         }
 
@@ -69,25 +67,56 @@ class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.
 
     }
     private fun setupRecyclerView() {
-        adapter = MyTaskListAdapter(ArrayList(), ArrayList(),this, this)
+        adapter = MyTaskListAdapter(ArrayList(), ArrayList(), requireContext(),
+            ArrayList(),this, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this.context)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                activity,
-                DividerItemDecoration.VERTICAL
-            )
-        )
+        recyclerView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
     }
 
     override fun onItemClick(position: Int) {
-//        TODO("Not yet implemented")
+
+        val clickedItem : TaskResponse ?= tasksViewModel.products.value?.get(position)
+//        //val department_name :String?= getDepartmentById(clickedItem?.departmentID, departments  )
+//        //val user_name : String? = getNameById(clickedItem?.createdByUserID,allusers)
+//        val  bundle = bundleOf(
+//            "taskID" to clickedItem?.id.toString(),
+//            "title" to clickedItem?.title,
+//            "description" to clickedItem?.description,
+//            "createdBy" to clickedItem?.createdByUserID,
+//           // "assigned_to_user_it" to user_name,
+//            "priority" to clickedItem?.priority.toString(),
+//            "deadline" to clickedItem?.deadline,
+//           // "departmentId" to department_name,
+//            "status" to clickedItem?.status,
+//            "progress" to clickedItem?.progress)
+
+
+        findNavController().navigate(R.id.detailsFragment)
     }
 
     override fun onItemLongClick(position: Int) {
 //        TODO("Not yet implemented")
     }
 
+    fun getNameById(Id : Int?, listUser : ArrayList<UserResponse>) : String
+    {
+        val user = listUser.find { it.id == Id}
+        //Log.d("user", user.toString())
+        if (user != null) {
+            return user.last_name + " " +user.first_name
+        }
+        return "Anonymus"
+    }
+    fun getDepartmentById(Id : Int?,departments:ArrayList<DepartmentResponse>) : String
+    {
+        val value = departments.find { it.Id == Id}
+        //Log.d("user", user.toString())
+        if (value != null) {
+            return value.departmentName
+        }
+        return "Anonymus"
+    }
 
 }

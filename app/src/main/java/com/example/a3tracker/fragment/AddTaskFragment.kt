@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.a3tracker.R
 import com.example.a3tracker.api.ThreeTrackerRepository
+import com.example.a3tracker.api.model.DepartmentResponse
 import com.example.a3tracker.databinding.FragmentAddTaskBinding
 import com.example.a3tracker.databinding.FragmentSettingsBinding
 import com.example.a3tracker.viewmodel.*
@@ -17,23 +19,17 @@ import com.example.a3tracker.viewmodel.*
 class AddTaskFragment : Fragment() {
 
 
-    private lateinit var departments: DepartmentsViewModel
+    private val departments: DepartmentsViewModel by activityViewModels()
     private lateinit var binding : FragmentAddTaskBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = DepartmentsViewModelFactory(ThreeTrackerRepository())
-        departments  = ViewModelProvider(this,factory)[DepartmentsViewModel::class.java]
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         binding = FragmentAddTaskBinding.inflate(inflater)
-
-        val factory = DepartmentsViewModelFactory(ThreeTrackerRepository())
-        departments  = ViewModelProvider(this,factory)[DepartmentsViewModel::class.java]
+        
 
         return  binding.root
 
