@@ -1,6 +1,7 @@
 package com.example.a3tracker.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,8 @@ class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.
     private lateinit var adapter: MyTaskListAdapter
     private val getUsersViewModel:GetUsersViewModel by activityViewModels()
     private val departmentsViewModel:DepartmentsViewModel by activityViewModels()
-
+    private lateinit var users : ArrayList<UserResponse>
+    private lateinit var departments:ArrayList<DepartmentResponse>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +42,10 @@ class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_tasks, container, false)
+
+        users = getUsersViewModel.getUsers.value as ArrayList<UserResponse>
+        departments = departmentsViewModel.departments.value as ArrayList<DepartmentResponse>
+
 
         recyclerView = view.findViewById(R.id.recycler_view2)
         setupRecyclerView()
@@ -78,22 +84,23 @@ class MyTasksFragment : Fragment(R.layout.fragment_my_tasks), MyTaskListAdapter.
     override fun onItemClick(position: Int) {
 
         val clickedItem : TaskResponse ?= tasksViewModel.products.value?.get(position)
-//        //val department_name :String?= getDepartmentById(clickedItem?.departmentID, departments  )
-//        //val user_name : String? = getNameById(clickedItem?.createdByUserID,allusers)
-//        val  bundle = bundleOf(
-//            "taskID" to clickedItem?.id.toString(),
-//            "title" to clickedItem?.title,
-//            "description" to clickedItem?.description,
-//            "createdBy" to clickedItem?.createdByUserID,
-//           // "assigned_to_user_it" to user_name,
-//            "priority" to clickedItem?.priority.toString(),
-//            "deadline" to clickedItem?.deadline,
-//           // "departmentId" to department_name,
-//            "status" to clickedItem?.status,
-//            "progress" to clickedItem?.progress)
+        val department_name :String?= getDepartmentById(clickedItem?.departmentID, departments  )
+        val user_name : String? = getNameById(clickedItem?.createdByUserID,users)
+        val createdBy :  String? = getNameById(clickedItem?.createdByUserID,users)
 
 
-        findNavController().navigate(R.id.detailsFragment)
+        val  bundle = bundleOf(
+            "title" to clickedItem?.title,
+            "description" to clickedItem?.description,
+            "createdBy" to createdBy,
+            "assigned_to_user_id" to user_name,
+            "priority" to clickedItem?.priority.toString(),
+            "deadline" to clickedItem?.deadline.toString(),
+            "departmentId" to department_name,
+            "status" to clickedItem?.status.toString(),
+            "progress" to clickedItem?.progress.toString())
+
+        findNavController().navigate(R.id.detailsFragment,bundle)
     }
 
     override fun onItemLongClick(position: Int) {

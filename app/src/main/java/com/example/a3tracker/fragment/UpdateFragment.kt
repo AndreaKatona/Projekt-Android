@@ -22,6 +22,7 @@ class UpdateFragment : Fragment() {
     private val profileViewModel : ProfileViewModel by activityViewModels()
     private lateinit var updateProfile : UpdateProfileViewModel
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,11 +31,6 @@ class UpdateFragment : Fragment() {
 
         val factoryUpdate = UpdateProfileViewModelFactory(ThreeTrackerRepository())
         updateProfile= ViewModelProvider(requireActivity(),factoryUpdate)[UpdateProfileViewModel::class.java]
-
-       // val factory = ProfileViewModelFactory(ThreeTrackerRepository())
-        //profileViewModel = ViewModelProvider(requireActivity(),factory)[ProfileViewModel::class.java]
-
-
 
         return binding.root
     }
@@ -77,6 +73,8 @@ class UpdateFragment : Fragment() {
             Log.d("onclick: ",image)
         }
        image?.let { updateProfile.update(last_name,first_name,address,number, it) }
+
+
 
 
 
